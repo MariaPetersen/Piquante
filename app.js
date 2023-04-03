@@ -2,7 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require("dotenv");
 
+const userRoutes = require("./routes/user.js")
+
 const app = express();
+
+app.use(express.json())
 
 dotenv.config();
 
@@ -23,9 +27,14 @@ const database = (module.exports = () => {
 
 database();
 
-app.use((req, res) => {
-    res.json({ message:"Voilà votre nouveau serveur"})
-});
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+  });
+
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
 
