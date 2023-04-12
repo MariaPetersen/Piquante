@@ -1,7 +1,8 @@
 const Sauce = require('../models/sauce.js')
 const multer = require('multer');
 const mongoose = require('mongoose')
-const express = require('express')
+const express = require('express');
+const sauce = require('../models/sauce.js');
 
 
 exports.getSauces = (req, res, next) => {
@@ -18,10 +19,14 @@ exports.getOneSauce = (req, res, next) => {
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
-    delete sauceObject._id
-    delete sauceObject._userId;
+    delete sauceObject.userId;
+    console.log(sauceObject.name);
     const sauce = new Sauce({
-        ...req.body,
+        name: sauceObject.name,
+        manufacturer: sauceObject.manufacturer,
+        description: sauceObject.description,
+        mainPepper: sauceObject.mainPepper,
+        heat: sauceObject.heat,
         userId: req.auth.userId,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         likes: 0, 
